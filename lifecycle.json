@@ -1,0 +1,1 @@
+{ "Rules": [ { "Status": "Enabled", "Prefix": "*.backup", "Expiration": { "Days": 30 }, "ID": "ExpireBackup" }, { "Status": "Enabled", "Prefix": "*global*.sql", "Expiration": { "Days": 30 }, "ID": "Delete Globals.SQL" } ]}
