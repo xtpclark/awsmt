@@ -1,4 +1,4 @@
-#!/bin/bash
+t#!/bin/bash
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
@@ -9,15 +9,13 @@ WORKDATE=`date "+%m%d%Y"`
 WORKSEC=`date "+%s"`
 
 RT53DIR=route53
-ERP_DOMAIN=${DOMAIN}
+ERP_DOMAIN=xtuplecloud.com
 ERP_FQDN=${1}.${ERP_DOMAIN}
-ERP_RT53_ZONE_ID=${RT53_ZONE_ID}
-instance=i-026297f38997d8493
-# instance=${2}
+ERP_RT53_ZONE_ID=ZCU8EE8ESLJQD
 
-AWS_EC2_REGION=southeast-ap-2
-AWS_HOSTNAME=`aws ec2 describe-instances --region $AWS_EC2_REGION --instance-ids $instance | jq ' .Reservations[0] | .Instances[0] | .PublicDnsName' | sed 's/\"//g'`
+AWS_EC2_REGION=eu-west-2
 
+AWS_HOSTNAME=wsg-dev-xtuple.xtuplecloud.com
 
 makedns()
 {
@@ -28,11 +26,11 @@ true
   ERP_DELETE=${RT53DIR}/delete_${ERP_FQDN}_${WORKDATE}_rt53.json
   
 cat << EOF > ${ERP_CREATE}
-{ "Comment":"Create record for $XTCRMACCT on Route 53",  "Changes": [ {"Action": "CREATE", "ResourceRecordSet":  {  "Name": "${ERP_FQDN}.", "Type": "CNAME", "TTL": 60, "ResourceRecords":  [ {"Value": "${AWS_HOSTNAME}" } ] }  }  ] }
+{ "Comment":"Create record for ${ERP_FQDN} on Route 53",  "Changes": [ {"Action": "CREATE", "ResourceRecordSet":  {  "Name": "${ERP_FQDN}.", "Type": "CNAME", "TTL": 60, "ResourceRecords":  [ {"Value": "${AWS_HOSTNAME}" } ] }  }  ] }
 EOF
 
 cat << EOF > ${ERP_DELETE}
-{ "Comment":"Delete record for $XTCRMACCT on Route 53",  "Changes": [ {"Action": "DELETE", "ResourceRecordSet":  {  "Name": "${ERP_FQDN}.", "Type": "CNAME", "TTL": 60, "ResourceRecords":  [ {"Value": "${AWS_HOSTNAME}" } ] }  }  ] }
+{ "Comment":"Delete record for ${ERP_FQDN} on Route 53",  "Changes": [ {"Action": "DELETE", "ResourceRecordSet":  {  "Name": "${ERP_FQDN}.", "Type": "CNAME", "TTL": 60, "ResourceRecords":  [ {"Value": "${AWS_HOSTNAME}" } ] }  }  ] }
 EOF
 }
 

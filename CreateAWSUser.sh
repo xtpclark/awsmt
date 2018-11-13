@@ -11,9 +11,11 @@ aws iam create-user --user-name bak_${1}
 aws iam create-access-key --user-name bak_${1} > ${AWS_CREDENTIALS}
 
 aws iam add-user-to-group --user-name bak_${1} --group-name XTN_Backups
+RET=$?
+echo "Added user to XTN_Backups"
 
-aws s3 mb s3://${BUCKET}
-aws s3 cp ${AWS_CREDENTIALS} s3://${BUCKET}/${AWS_CREDENTIALS}
+# aws s3 mb s3://xtnbackups/${BUCKET}
+aws s3 cp ${AWS_CREDENTIALS} s3://xtnbackups/${BUCKET}/${AWS_CREDENTIALS}
 
 AWS_ACCESSKEY=$(jq ".[] | .AccessKeyId" ${AWS_CREDENTIALS})
 AWS_SECRET=$(jq ".[] | .SecretAccessKey" ${AWS_CREDENTIALS})
